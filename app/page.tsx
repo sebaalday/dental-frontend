@@ -1,8 +1,12 @@
+// FILE: page.tsx
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, MessageSquare, Shield, Star, Users } from "lucide-react";
+import { Calendar, MessageSquare, Shield, Star, Users, Video } from "lucide-react";
+import VideoRecorder from '@/components/VideoRecorder';
 
 export default function Home() {
   return (
@@ -35,6 +39,12 @@ export default function Home() {
               <Button size="lg" variant="outline" className="w-full sm:w-auto">
                 <MessageSquare className="mr-2 h-4 w-4" />
                 Chat with Us
+              </Button>
+            </Link>
+            <Link href="/video-recorder">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                <Video className="mr-2 h-4 w-4" />
+                Record Video
               </Button>
             </Link>
           </div>
@@ -96,3 +106,4 @@ export default function Home() {
     </>
   );
 }
+
