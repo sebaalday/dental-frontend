@@ -1,13 +1,26 @@
 // FILE: components/VideoRecorder.tsx
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 const VideoRecorder: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
+  const [recordingTime, setRecordingTime] = useState(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout | undefined;
+    if (isRecording) {
+      timer = setInterval(() => {
+        setRecordingTime((prevTime) => prevTime + 1);
+      }, 1000);
+    } else if (timer) {
+      clearInterval(timer);
+    }
+    return () => clearInterval(timer);
+  }, [isRecording]);
 
   const startRecording = async () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -56,10 +69,17 @@ const VideoRecorder: React.FC = () => {
     window.URL.revokeObjectURL(url);
   };
 
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div>
       <video ref={videoRef} autoPlay muted />
       <div>
+        <p>Recording Time: {formatTime(recordingTime)}</p>
         {!isRecording ? (
           <button onClick={startRecording}>Start Recording</button>
         ) : (
