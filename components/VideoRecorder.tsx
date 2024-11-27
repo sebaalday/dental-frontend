@@ -44,6 +44,7 @@ const VideoRecorder: React.FC = () => {
 
     mediaRecorder.start();
     setIsRecording(true);
+    setRecordingTime(0); // Reset the recording time
 
     setTimeout(() => {
       stopRecording();
@@ -69,6 +70,13 @@ const VideoRecorder: React.FC = () => {
     window.URL.revokeObjectURL(url);
   };
 
+  const resetChronometerAndRestartRecording = async () => {
+    stopRecording();
+    setRecordingTime(0);
+    setRecordedChunks([]);
+    await startRecording();
+  };
+
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -88,6 +96,7 @@ const VideoRecorder: React.FC = () => {
         {recordedChunks.length > 0 && (
           <button onClick={downloadRecording}>Download Recording</button>
         )}
+        <button onClick={resetChronometerAndRestartRecording}>Reset Chronometer and Restart Recording</button>
       </div>
     </div>
   );
